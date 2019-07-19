@@ -8,8 +8,10 @@ It's necessary to add a datasource inside Wildfly server, the file where to add 
 ```xml
 ...
 <subsystem xmlns="urn:jboss:domain:datasources:5.0">
-    <datasources>
-        <datasource jta="true" jndi-name="java:/jdbc/mySqlMampDS" pool-name="mySqlMampDS" enabled="true" use-java-context="true" use-ccm="true">
+	<datasources>
+		<datasource jta="true" jndi-name="java:/jdbc/mySqlMampDS"
+			pool-name="mySqlMampDS" enabled="true" use-java-context="true"
+			use-ccm="true" statistics-enabled="true">
 			<connection-url>jdbc:mysql://localhost:8889/library_project?serverTimezone=UTC</connection-url>
 			<driver>mysql</driver>
 			<security>
@@ -17,13 +19,13 @@ It's necessary to add a datasource inside Wildfly server, the file where to add 
 				<password>root</password>
 			</security>
 		</datasource>
-        <drivers>
-            <driver name="mysql" module="com.mysql">
-                <driver-class>com.mysql.cj.jdbc.Driver</driver-class>
+		<drivers>
+			<driver name="mysql" module="com.mysql">
+				<driver-class>com.mysql.cj.jdbc.Driver</driver-class>
 				<xa-datasource-class>com.mysql.cj.jdbc.MysqlXADataSource</xa-datasource-class>
-            </driver>
-        </drivers>
-    </datasources>
+			</driver>
+		</drivers>
+	</datasources>
 </subsystem>
 ...
 ```

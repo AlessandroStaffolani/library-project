@@ -7,7 +7,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>Library Project</name>
-	<description>Library project used as example to create an EJB 3 application that use hibernate, JMS with a REST interface</description>
+	<description>Library Project is a JEE example application that uses: EJB 3.x, JPA with Hibernate for the persistence and provides some RESTFul API for the management of the entities of a library.</description>
 
 	<url>http://wildfly.org</url>
 	<licenses>

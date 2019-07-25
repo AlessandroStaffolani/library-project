@@ -1,24 +1,45 @@
 package it.astaffolani.LibraryProject.rest;
 
+import it.astaffolani.LibraryProject.controller.AuthorControllerLocal;
+import it.astaffolani.LibraryProject.entity.AuthorEntity;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ejb.EJB;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Path("/authors")
 public class AuthorRest {
-	
-	@GET
-	@Path("/{name}")
+
+    @EJB
+    private AuthorControllerLocal authorController;
+
+    @GET
+    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, Object> sayHello(@PathParam("name") String name) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("message", "Hello " + name);
+    public Map<String, Object> getAll() {
+        List<AuthorEntity> authors = authorController.findAll();
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("authors", authors);
         return result;
     }
 
+    @POST
+    @Path("/")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public AuthorEntity addTest(AuthorEntity authorEntity) {
+        authorController.insert(authorEntity);
+        return authorEntity;
+    }
+
+    @GET
+    @Path("/id/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public AuthorEntity getById(@PathParam("id") long id) {
+        return authorController.findById(id);
+    }
 }

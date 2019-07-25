@@ -5,16 +5,12 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -32,18 +28,17 @@ public class AuthorEntity implements Serializable {
 	@NotEmpty
 	private String name;
 
+	@Column(columnDefinition = "TEXT")
 	private String description;
 
 	@Column(name = "birth_date")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date birthDate;
 
-	@ManyToMany(cascade = { CascadeType.ALL })
-    @JoinTable(
-        name = "author_book", 
-        joinColumns = { @JoinColumn(name = "author_id") }, 
-        inverseJoinColumns = { @JoinColumn(name = "book_id") }
-    )
+	@ManyToMany(cascade = { CascadeType.ALL }, mappedBy = "authors", fetch = FetchType.EAGER)
+	@JsonIgnoreProperties("authors")
 	private Set<BookEntity> books = new HashSet<>();
+
 	private static final long serialVersionUID = 1L;
 
 	public AuthorEntity() {
@@ -90,4 +85,14 @@ public class AuthorEntity implements Serializable {
 		this.books = books;
 	}
 
+    @Override
+    public String toString() {
+        return "AuthorEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", birthDate=" + birthDate +
+                ", books=" + books +
+                '}';
+    }
 }

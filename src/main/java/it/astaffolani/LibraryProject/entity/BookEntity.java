@@ -5,13 +5,13 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -32,11 +32,14 @@ public class BookEntity implements Serializable {
 	private int pages;
 	
 	@Column(name = "pubblication_date")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date pubblicationDate;
 	
-	@ManyToMany(mappedBy = "books")
+	@ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("books")
 	private Set<AuthorEntity> authors = new HashSet<>();
-	
+
+	@Column(columnDefinition = "TEXT")
 	private String preface;
 	
 	private static final long serialVersionUID = 1L;
@@ -44,6 +47,10 @@ public class BookEntity implements Serializable {
 	public BookEntity() {
 		super();
 	}
+
+	public BookEntity(JsonNode jsonBook) {
+
+    }
 
 	public long getId() {
 		return id;
@@ -93,4 +100,15 @@ public class BookEntity implements Serializable {
 		this.preface = preface;
 	}
 
+	@Override
+	public String toString() {
+		return "BookEntity{" +
+				"id=" + id +
+				", title='" + title + '\'' +
+				", pages=" + pages +
+				", pubblicationDate=" + pubblicationDate +
+				", authors=" + authors +
+				", preface='" + preface + '\'' +
+				'}';
+	}
 }

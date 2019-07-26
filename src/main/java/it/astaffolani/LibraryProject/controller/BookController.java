@@ -8,9 +8,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import it.astaffolani.LibraryProject.data.BookRepositoryBean;
 import it.astaffolani.LibraryProject.entity.AuthorEntity;
 import it.astaffolani.LibraryProject.entity.BookEntity;
+import it.astaffolani.LibraryProject.utils.LoggerInterceptor;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -24,11 +26,13 @@ public class BookController implements BookControllerLocal {
     private AuthorControllerLocal authorController;
 
     @Override
+    @Interceptors(LoggerInterceptor.class)
     public BookEntity insert(BookEntity book) {
         return bookRepository.insert(book);
     }
 
     @Override
+    @Interceptors(LoggerInterceptor.class)
     public BookEntity insert(JsonNode jsonBook) {
         ObjectNode jsonObject = (ObjectNode) jsonBook;
         ArrayNode authors = (ArrayNode) jsonObject.get("authors");
@@ -60,11 +64,13 @@ public class BookController implements BookControllerLocal {
     }
 
     @Override
+    @Interceptors(LoggerInterceptor.class)
     public List<BookEntity> findAll() {
         return bookRepository.findAll();
     }
 
     @Override
+    @Interceptors(LoggerInterceptor.class)
     public BookEntity findById(long id) {
         return bookRepository.findById(id);
     }

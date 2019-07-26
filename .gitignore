@@ -102,3 +102,5 @@ derby.log
 ######################
 
 .factorypath
+
+target/

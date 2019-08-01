@@ -41,7 +41,10 @@ public class BookEntity implements Serializable {
 
 	@Column(columnDefinition = "TEXT")
 	private String preface;
-	
+
+	@Column(name = "n_copies", columnDefinition="INT default '10'")
+	private int nCopies;
+
 	private static final long serialVersionUID = 1L;
 	
 	public BookEntity() {
@@ -100,7 +103,15 @@ public class BookEntity implements Serializable {
 		this.preface = preface;
 	}
 
-	@Override
+    public int getnCopies() {
+        return nCopies;
+    }
+
+    public void setnCopies(int nCopies) {
+        this.nCopies = nCopies;
+    }
+
+    @Override
 	public String toString() {
 		return "BookEntity{" +
 				"id=" + id +

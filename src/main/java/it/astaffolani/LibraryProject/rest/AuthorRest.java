@@ -31,7 +31,7 @@ public class AuthorRest {
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public AuthorEntity addTest(AuthorEntity authorEntity) {
+    public AuthorEntity add(AuthorEntity authorEntity) {
         authorController.insert(authorEntity);
         return authorEntity;
     }

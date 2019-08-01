@@ -54,7 +54,7 @@ public class BookController implements BookControllerLocal {
                 authorEntities.add(authorController.findById(new Long(id)));
             }
             try {
-                jsonObject.put("authors", mapper.valueToTree(authorEntities));
+                jsonObject.replace("authors", mapper.valueToTree(authorEntities));
                 book = mapper.treeToValue(jsonObject, BookEntity.class);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();

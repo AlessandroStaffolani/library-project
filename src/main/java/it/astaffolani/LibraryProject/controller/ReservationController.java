@@ -9,10 +9,28 @@ import it.astaffolani.LibraryProject.data.UserRepositoryBean;
 import it.astaffolani.LibraryProject.entity.BookEntity;
 import it.astaffolani.LibraryProject.entity.ReservationEntity;
 import it.astaffolani.LibraryProject.entity.UserEntity;
+import it.astaffolani.LibraryProject.event.UpdateBookEvent;
 
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.jms.*;
 import java.util.List;
+
+/**
+ * Definition of the two JMS destinations used by the quickstart
+ * (one queue and one topic).
+ */
+@JMSDestinationDefinitions(
+        value = {
+                @JMSDestinationDefinition(
+                        name = "java:/topic/RESERVATIONTopic",
+                        interfaceName = "javax.jms.Topic",
+                        destinationName = "ReservationTopic"
+                )
+        }
+)
 
 @Stateless
 public class ReservationController implements ReservationControllerLocal {
@@ -26,6 +44,11 @@ public class ReservationController implements ReservationControllerLocal {
     @EJB
     private ReservationRepositoryBean reservationRepository;
 
+    @Inject
+    private JMSContext context;
+
+    @Resource(lookup = "java:/topic/RESERVATIONTopic")
+    private Topic topic;
 
     @Override
     public ReservationEntity insert(ReservationEntity reservation) {
@@ -50,7 +73,9 @@ public class ReservationController implements ReservationControllerLocal {
         jsonObject.replace("book", mapper.valueToTree(bookEntity));
         ReservationEntity reservationEntity = mapper.treeToValue(jsonObject, ReservationEntity.class);
 
-        return reservationRepository.insert(reservationEntity);
+        ReservationEntity insertedEntity = reservationRepository.insert(reservationEntity);
+        sendMessage(insertedEntity.getBook().getId(), 1);
+        return insertedEntity;
     }
 
     @Override
@@ -61,5 +86,17 @@ public class ReservationController implements ReservationControllerLocal {
     @Override
     public ReservationEntity findById(long id) {
         return reservationRepository.findById(id);
+    }
+
+    private void sendMessage(Long bookId, int nBookReservation) {
+        TopicPublisher publisher = (TopicPublisher) context.createProducer();
+        UpdateBookEvent event = new UpdateBookEvent();
+        event.setBookId(bookId);
+        event.setnBookReservation(nBookReservation);
+        try {
+            publisher.publish(topic, event);
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
     }
 }

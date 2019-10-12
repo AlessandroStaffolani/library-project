@@ -64,6 +64,11 @@ public class BookController implements BookControllerLocal {
     }
 
     @Override
+    public BookEntity update(BookEntity book) {
+        return bookRepository.update(book);
+    }
+
+    @Override
     @Interceptors(LoggerInterceptor.class)
     public List<BookEntity> findAll() {
         return bookRepository.findAll();

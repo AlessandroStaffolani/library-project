@@ -22,6 +22,17 @@ public class BookRepositoryBean {
         return book;
     }
 
+    public BookEntity update(BookEntity book) {
+        if (em.contains(book)) {
+            // Managed state
+            em.persist(book);
+        } else {
+            // Detached state
+            em.merge(book);
+        }
+        return book;
+    }
+
     public List<BookEntity> findAll() {
         return em.createQuery("SELECT b FROM BookEntity b").getResultList();
     }

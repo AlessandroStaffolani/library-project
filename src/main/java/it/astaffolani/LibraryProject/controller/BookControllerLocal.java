@@ -11,6 +11,7 @@ public interface BookControllerLocal {
 
     public BookEntity insert(BookEntity book);
     public BookEntity insert(JsonNode jsonBook);
+    public BookEntity update(BookEntity book);
     public List<BookEntity> findAll();
     public BookEntity findById(long id);
 }
